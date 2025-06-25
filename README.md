@@ -1,6 +1,6 @@
 # 🧪 Fake Store API Testing (Postman)
 
-Este proyecto contiene una colección de pruebas API usando Postman para la API pública [Fake Store API](https://fakestoreapi.com/), Cubre operaciones CRUD sobre productos, con autenticación de usuario y tests automatizados.
+Este proyecto contiene una colección de pruebas API usando Postman para la API pública [Fake Store API](https://fakestoreapi.com/), cubre operaciones CRUD sobre productos, con autenticación de usuario y tests automatizados.
 
 ---
 
@@ -71,5 +71,7 @@ Cada request contiene scripts en Postman para validar:
 
 ## 🙌 Autor
 Alejandro Amoza – QA Tester
- [LinkedIn](https://www.linkedin.com/in/alejandro-amoza)
- [Portfolio](https://alejandro-amoza.github.io/portfolio)
+- [LinkedIn](https://www.linkedin.com/in/alejandro-amoza)
+- [Portfolio](https://alejandro-amoza.github.io/portfolio)
+ 
+
