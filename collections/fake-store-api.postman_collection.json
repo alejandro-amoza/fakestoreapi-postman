@@ -1,0 +1,356 @@
+{
+	"info": {
+		"_postman_id": "dc9b95a0-5da9-4c22-9db1-61ea1f2d1cfb",
+		"name": "Fakestore API",
+		"description": "Esta colección contiene un conjunto de requests para interactuar con la **Fake Store API**, simulando operaciones CRUD sobre productos.\n\nIncluye:\n\n- Login de usuario (POST /auth/login)\n    \n- Listado de productos (GET /products)\n    \n- Detalle de producto por ID (GET /products/:id)\n    \n- Crear producto (POST /products)\n    \n- Actualizar producto (PUT /products/:id)\n    \n- Eliminar producto (DELETE /products/:id)\n    \n\nCada request incluye tests automatizados usando el entorno de script de Postman.\n\n---\n\nEnlace a la documentación de la API: [https://fakestoreapi.com/docs](https://fakestoreapi.com/docs)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45910637",
+		"_collection_link": "https://aleqa-5224569.postman.co/workspace/Ale-QA's-Workspace~eac69d42-c0da-4cec-8946-972c346fc2a7/collection/45910637-dc9b95a0-5da9-4c22-9db1-61ea1f2d1cfb?action=share&source=collection_link&creator=45910637"
+	},
+	"item": [
+		{
+			"name": "001 - Token de login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"const json = pm.response.json();\r",
+							"pm.environment.set(\"accessToken\", json.access_token);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"{{email}}\",\r\n  \"password\": \"{{password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/auth/login",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "002 - Obtener perfil",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Email matches\", ()=> {\r",
+							"  const json = pm.response.json();\r",
+							"  pm.expect(json.email).to.eql(pm.environment.get(\"email\"));\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{baseUrl}}/auth/profile",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"auth",
+						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "003 - Listar productos",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Respuesta es un array\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Al menos un producto disponible\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(json.length).to.be.greaterThan(0);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Tipos de datos correctos (primer producto)\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    const first = json[0];\r",
+							"    pm.expect(first.id).to.be.a(\"number\");\r",
+							"    pm.expect(first.title).to.be.a(\"string\");\r",
+							"    pm.expect(first.price).to.be.a(\"number\");\r",
+							"    pm.expect(first.description).to.be.a(\"string\");\r",
+							"    pm.expect(first.category).to.be.an(\"object\");\r",
+							"    pm.expect(first.images).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Los productos tienen estructura esperada\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    json.forEach(product => {\r",
+							"        pm.expect(product).to.have.property(\"id\");\r",
+							"        pm.expect(product).to.have.property(\"title\");\r",
+							"        pm.expect(product).to.have.property(\"price\");\r",
+							"        pm.expect(product).to.have.property(\"description\");\r",
+							"        pm.expect(product).to.have.property(\"category\");\r",
+							"        pm.expect(product).to.have.property(\"images\");\r",
+							"    });\r",
+							"});\r",
+							"\r",
+							"pm.environment.set(\"productId\", pm.response.json()[0].id);"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "004 - Crear producto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {\r",
+							"    pm.response.to.have.status(201);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"El producto fue creado\", () => {\r",
+							"  const json = pm.response.json();\r",
+							"  pm.environment.set(\"productId\", json.id); \r",
+							"  pm.expect(json.title).to.eql(\"Test QA New product\");\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Test QA New product\",\r\n  \"price\": 199,\r\n  \"description\": \"Producto creado desde Postman\",\r\n  \"categoryId\": 1,\r\n  \"images\": [\"https://imgur.com/a/vdjGq7t\"]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "005 - Actualizar producto",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Producto actualizado\", () => {\r",
+							"  const json = pm.response.json();\r",
+							"  pm.expect(json.title).to.eql(\"Producto actualizado QA\");\r",
+							"  pm.expect(json.price).to.eql(50000);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Producto actualizado QA\",\r\n  \"price\": 50000,\r\n  \"description\": \"Este producto fue editado desde Postman\",\r\n  \"categoryId\": 1,\r\n  \"images\": [\r\n    \"https://imgur.com/a/vdjGq7t\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products/{{productId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "005 - Actualizar producto Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Body vacío\", () => {\r",
+							"    const json = pm.response.json();\r",
+							"    pm.expect(Object.keys(json).length).to.eql(0);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{accessToken}}",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"title\": \"Producto actualizado QA\",\r\n  \"price\": 50000,\r\n  \"description\": \"Este producto fue editado desde Postman\",\r\n  \"categoryId\": 1,\r\n  \"images\": [\r\n    \"https://imgur.com/a/vdjGq7t\"\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{baseUrl}}/products/{{productId}}",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						"products",
+						"{{productId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
