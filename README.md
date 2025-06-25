@@ -1,4 +1,4 @@
-# 🧪 DummyJSON API Testing (Postman)
+# 🧪 Fake Store API Testing (Postman)
 
 Este proyecto contiene una colección de pruebas API usando Postman para la API pública [Fake Store API](https://fakestoreapi.com/), Cubre operaciones CRUD sobre productos, con autenticación de usuario y tests automatizados.
 
